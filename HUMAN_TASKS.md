@@ -4,8 +4,8 @@ This file tracks tasks that require human credentials or approvals.
 
 ## Open Tasks
 
-- [ ] Decide whether to keep using the existing Clerk instance (`awake-wolf-1`) or replace with a dedicated Clerk app for this project.
-  - If replacing: provide new keys and issuer, then I will rotate Convex + Vercel env vars and redeploy.
+- [ ] End-to-end smoke test from web UI token creation + CLI upload against production.
+  - Verify generated markdown renders image publicly in a GitHub comment/PR.
 
 ## Completed Tasks
 
@@ -22,4 +22,5 @@ This file tracks tasks that require human credentials or approvals.
   - `CLERK_SECRET_KEY`
   - `CLERK_JWT_ISSUER_DOMAIN`
 - [x] Convex production auth issuer configured:
-  - `CLERK_JWT_ISSUER_DOMAIN=https://awake-wolf-1.clerk.accounts.dev`
+  - `CLERK_JWT_ISSUER_DOMAIN=https://clerk.agent-images.24letters.com`
+- [x] Rotated production Clerk credentials to dedicated issuer `https://clerk.agent-images.24letters.com` and redeployed Convex + Vercel.
