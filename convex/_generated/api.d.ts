@@ -8,7 +8,8 @@
  * @module
  */
 
-import type * as myFunctions from "../myFunctions.js";
+import type * as cliTokens from "../cliTokens.js";
+import type * as images from "../images.js";
 
 import type {
   ApiFromModules,
@@ -17,7 +18,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  myFunctions: typeof myFunctions;
+  cliTokens: typeof cliTokens;
+  images: typeof images;
 }>;
 
 /**

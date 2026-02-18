@@ -1,4 +1,4 @@
-import { internalMutation, mutation, query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const listMyCliTokens = query({
@@ -51,16 +51,24 @@ export const revokeMyCliToken = mutation({
   },
 });
 
-export const storeCliToken = internalMutation({
+export const createMyCliToken = mutation({
   args: {
-    userId: v.string(),
     label: v.string(),
     tokenHash: v.string(),
     tokenPreview: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("You must be signed in to create a CLI token.");
+    }
+
+    if (!args.label.trim()) {
+      throw new Error("Token label is required.");
+    }
+
     return await ctx.db.insert("cliTokens", {
-      userId: args.userId,
+      userId: identity.subject,
       label: args.label,
       tokenHash: args.tokenHash,
       tokenPreview: args.tokenPreview,
