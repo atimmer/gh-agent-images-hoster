@@ -20,7 +20,7 @@
     "start": "next start",
     "lint": "eslint .",
     "cli": "node ./packages/cli/src/index.mjs",
-    "publish:cli": "pnpm -C packages/cli publish --access public"
+    "publish:cli": "pnpm publish --filter @24letters/agent-images --access public --no-git-checks"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.60.0",
