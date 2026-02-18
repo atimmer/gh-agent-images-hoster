@@ -17,9 +17,6 @@ importers:
       convex:
         specifier: ^1.31.7
         version: 1.31.7(@clerk/clerk-react@5.60.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      mime-types:
-        specifier: ^3.0.2
-        version: 3.0.2
       next:
         specifier: ^16.1.6
         version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -63,6 +60,12 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+
+  packages/cli:
+    dependencies:
+      mime-types:
+        specifier: ^3.0.2
+        version: 3.0.2
 
 packages:
 

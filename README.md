@@ -48,7 +48,18 @@ After sign-in, the home page provides:
 
 ## CLI
 
-The repository ships a local CLI binary: `gh-agent-images`.
+The CLI is now a dedicated package at `packages/cli`:
+
+- Package name: `@24letters/gh-agent-images`
+- Binary name: `gh-agent-images`
+
+Install from npm (after publish):
+
+    pnpm add -g @24letters/gh-agent-images
+
+Run locally from this repo:
+
+    pnpm cli -- --help
 
 ### One-time auth setup
 
@@ -69,6 +80,10 @@ Example:
 Output example:
 
     ![New dashboard](https://gh-images.example.com/i/6f0f2f3e-b9cc-4d8f-97d3-0c254e7fba4e)
+
+Publish command from repo root:
+
+    pnpm publish:cli
 
 ## Deployment
 

@@ -1,0 +1,45 @@
+{
+  "name": "@24letters/gh-agent-images",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLI for uploading immutable images to GH Agent Images Hoster.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atimmer/gh-agent-images-hoster"
+  },
+  "homepage": "https://github.com/atimmer/gh-agent-images-hoster#readme",
+  "bugs": {
+    "url": "https://github.com/atimmer/gh-agent-images-hoster/issues"
+  },
+  "bin": {
+    "gh-agent-images": "src/index.mjs"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "github",
+    "images",
+    "cli",
+    "markdown",
+    "uploads"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "node src/index.mjs",
+    "build": "echo 'No build step required'",
+    "typecheck": "echo 'No typecheck step configured'",
+    "lint": "echo 'No package-local lint step configured'",
+    "format": "echo 'No package-local format step configured'"
+  },
+  "dependencies": {
+    "mime-types": "^3.0.2"
+  }
+}
