@@ -1,5 +1,5 @@
 {
-  "name": "@24letters/gh-agent-images",
+  "name": "@24letters/agent-images",
   "version": "0.1.0",
   "type": "module",
   "description": "CLI for uploading immutable images to GH Agent Images Hoster.",

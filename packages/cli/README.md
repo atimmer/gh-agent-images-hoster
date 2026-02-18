@@ -1,11 +1,11 @@
-# @24letters/gh-agent-images
+# @24letters/agent-images
 
 CLI for uploading immutable images to GH Agent Images Hoster.
 
 ## Install
 
 ```sh
-pnpm add -g @24letters/gh-agent-images
+pnpm add -g @24letters/agent-images
 ```
 
 ## Usage

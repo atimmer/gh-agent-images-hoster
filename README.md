@@ -50,12 +50,12 @@ After sign-in, the home page provides:
 
 The CLI is now a dedicated package at `packages/cli`:
 
-- Package name: `@24letters/gh-agent-images`
+- Package name: `@24letters/agent-images`
 - Binary name: `gh-agent-images`
 
 Install from npm (after publish):
 
-    pnpm add -g @24letters/gh-agent-images
+    pnpm add -g @24letters/agent-images
 
 Run locally from this repo:
 
