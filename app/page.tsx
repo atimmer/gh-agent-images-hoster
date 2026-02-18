@@ -121,7 +121,7 @@ export default function Home() {
               markdown links that render publicly.
             </p>
             <SignedOut>
-              <SignInButton mode="modal">
+              <SignInButton forceRedirectUrl="/">
                 <button className="rounded-lg border border-cyan-300 bg-cyan-400 px-5 py-2 font-medium text-slate-950 transition hover:bg-cyan-300">
                   Sign in to continue
                 </button>
