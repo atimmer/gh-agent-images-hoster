@@ -85,6 +85,12 @@ Publish command from repo root:
 
     pnpm publish:cli
 
+### Install skill via CLI
+
+    gh-agent-images install-skill
+
+This command delegates to [skills.sh](https://skills.sh/) and installs `gh-agent-images-upload` from this GitHub repository.
+
 ## Deployment
 
 ### Clerk

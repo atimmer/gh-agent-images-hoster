@@ -19,3 +19,11 @@ gh-agent-images upload <file-path> --agent <agent-name> [--alt "alt text"]
 ```
 
 The `upload` command prints markdown you can paste into GitHub pull requests.
+
+## Install the Agent Skill
+
+```sh
+gh-agent-images install-skill
+```
+
+This delegates to [skills.sh](https://skills.sh/) and installs the `gh-agent-images-upload` skill from this repository.

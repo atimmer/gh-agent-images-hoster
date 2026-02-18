@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { spawn } from "node:child_process";
 import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
@@ -8,6 +9,8 @@ import { lookup as lookupMimeType } from "mime-types";
 
 const CONFIG_DIR = path.join(os.homedir(), ".config", "gh-agent-images");
 const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
+const SKILL_REPO_URL = "https://github.com/atimmer/gh-agent-images-hoster";
+const SKILL_NAME = "gh-agent-images-upload";
 
 function parseArgs(argv) {
   const positional = [];
@@ -39,9 +42,11 @@ function printUsage() {
 Usage:
   gh-agent-images auth login --api <url> --token <token> [--agent <default-agent-name>]
   gh-agent-images upload <file-path> --agent <agent-name> [--alt <markdown-alt-text>]
+  gh-agent-images install-skill [--agent <agent>] [--global]
 
 Notes:
   - upload returns markdown you can paste directly into GitHub pull requests.
+  - install-skill delegates to skills.sh via: npx skills add ${SKILL_REPO_URL} --skill ${SKILL_NAME}
   - auth config is stored at ${CONFIG_PATH}
 `);
 }
@@ -191,6 +196,41 @@ async function runUpload(positional, flags) {
   process.stdout.write(`${body.markdown}\n`);
 }
 
+async function runCommand(command, args) {
+  await new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      stdio: "inherit",
+      shell: process.platform === "win32",
+    });
+
+    child.once("error", (error) => {
+      reject(error);
+    });
+
+    child.once("exit", (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+      reject(new Error(`Command failed with exit code ${code ?? "unknown"}.`));
+    });
+  });
+}
+
+async function runInstallSkill(flags) {
+  const args = ["skills", "add", SKILL_REPO_URL, "--skill", SKILL_NAME];
+
+  if (typeof flags.agent === "string" && flags.agent.trim()) {
+    args.push("--agent", flags.agent.trim());
+  }
+
+  if (flags.global === true) {
+    args.push("--global");
+  }
+
+  await runCommand("npx", args);
+}
+
 async function main() {
   const { positional, flags } = parseArgs(process.argv.slice(2));
   const [command, subcommand, ...restPositional] = positional;
@@ -207,6 +247,11 @@ async function main() {
 
   if (command === "upload") {
     await runUpload([subcommand, ...restPositional].filter(Boolean), flags);
+    return;
+  }
+
+  if (command === "install-skill" || (command === "skill" && subcommand === "install")) {
+    await runInstallSkill(flags);
     return;
   }
 

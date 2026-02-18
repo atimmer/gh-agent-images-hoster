@@ -4,6 +4,7 @@
 
 ### Added
 - Added repository changelog/release tooling: `CHANGELOG.md`, `RELEASING.md`, GitHub Release notes extraction workflow, and npm publish workflow.
+- Added `gh-agent-images install-skill` command that delegates to `skills.sh` (`npx skills add`) and installs the `gh-agent-images-upload` skill from this repository.
 
 ### Changed
 - Updated CLI publish command to use workspace filtering (`pnpm publish --filter @24letters/agent-images ...`) so publishing works reliably from the repo root.
