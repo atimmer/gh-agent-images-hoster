@@ -11,3 +11,5 @@
 
 - Always use `pnpm` instead of `npm`.
 - Keep commits focused and atomic.
+- Any changes made should update the `Unreleased` section in `CHANGELOG.md`.
+- If a changelog entry is later fixed by a follow-up change, merge that fix into the original bullet instead of adding a duplicate bullet.

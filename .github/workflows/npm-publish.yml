@@ -1,0 +1,44 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@10.28.2 --activate
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm run build
+
+      - name: Build CLI
+        run: pnpm -C packages/cli build
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Publish cli
+        run: pnpm publish --filter @24letters/agent-images --access public --no-git-checks --provenance
