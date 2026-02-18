@@ -43,6 +43,7 @@ Use that markdown directly in GitHub pull request comments or descriptions.
 
 ## Operational Rules
 
+- Before uploading a file, crop it to only include the relevant areas.
 - Always provide an agent name (`--agent` or configured default).
 - Never overwrite existing images; every upload creates a new immutable URL.
 - If upload fails, report the error text and do not fabricate a URL.

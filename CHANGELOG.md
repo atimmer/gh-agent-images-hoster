@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Updated the `gh-agent-images-upload` skill instructions to require cropping images to relevant areas before upload.
 
 ### Fixed
 
