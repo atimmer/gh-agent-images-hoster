@@ -19,6 +19,9 @@ This project lets authenticated users upload images through a CLI or a web app a
 - [x] (2026-02-18 11:00Z) Rebuilt home page into authenticated dashboard + settings for token management and copyable setup command.
 - [x] (2026-02-18 11:00Z) Added `AGENTS.md`, `HUMAN_TASKS.md`, skill file, and updated `README.md`.
 - [x] (2026-02-18 11:07Z) Ran `pnpm lint` and `pnpm build` successfully after implementation updates.
+- [x] (2026-02-18 11:21Z) Deployed Convex production backend to `https://fast-impala-736.convex.cloud`.
+- [x] (2026-02-18 11:22Z) Deployed Vercel production app and configured production env vars.
+- [ ] Resolve Vercel deployment protection so public image URLs are reachable without authentication.
 
 ## Surprises & Discoveries
 
@@ -27,6 +30,9 @@ This project lets authenticated users upload images through a CLI or a web app a
 
 - Observation: Convex code generation is blocked until a deployment is linked interactively.
   Evidence: `pnpm exec convex codegen` failed with `No CONVEX_DEPLOYMENT set`, and `pnpm exec convex dev --once` failed because interactive prompts are unavailable in this terminal mode.
+
+- Observation: Vercel production deployment is ready but currently protected by Vercel Authentication.
+  Evidence: `curl -I https://gh-agent-images-hoster.vercel.app` returns HTTP `401 Authentication Required`.
 
 ## Decision Log
 
@@ -46,9 +52,13 @@ This project lets authenticated users upload images through a CLI or a web app a
   Rationale: Convex CLI cannot generate types without deployment linkage; this keeps development moving while human setup is pending.
   Date/Author: 2026-02-18 / Codex
 
+- Decision: Reuse existing Clerk credentials already present locally to finish automated production wiring.
+  Rationale: This enabled immediate deployment without waiting for manual key provisioning, while preserving the option to rotate to a dedicated Clerk app later.
+  Date/Author: 2026-02-18 / Codex
+
 ## Outcomes & Retrospective
 
-Implemented core functionality end-to-end: immutable image records, public cached image delivery, CLI upload path, token settings UX, and documentation/agent guidance. The remaining gap is environment-specific validation (`convex codegen`, live auth flow, production deployment), which requires human credentials and interactive setup already tracked in `HUMAN_TASKS.md`.
+Implemented core functionality end-to-end and deployed both Convex and Vercel production targets. The remaining gap is removing Vercel deployment protection so image URLs are publicly accessible for GitHub rendering, which is tracked in `HUMAN_TASKS.md`.
 
 ## Context and Orientation
 
@@ -159,6 +169,17 @@ If environment variables are missing, the app should fail with explicit setup gu
   pnpm exec convex dev --once
   ✖ Cannot prompt for input in non-interactive terminals. (What would you like to configure?)
 
+- Deployment artifact:
+
+  pnpm exec convex deploy -y
+  ✔ Deployed Convex functions to https://fast-impala-736.convex.cloud
+
+  vercel --prod --yes
+  Production: https://gh-agent-images-hoster-c9d43snld-atimmers-projects.vercel.app
+
+  curl -I https://gh-agent-images-hoster.vercel.app
+  HTTP/2 401
+
 ## Interfaces and Dependencies
 
 Key dependencies used:
@@ -179,4 +200,4 @@ Required interfaces at completion:
   - `auth login --api <url> --token <token>`
   - `upload <path> --agent <name> [--alt <text>]`
 
-Plan update note (2026-02-18): Marked implementation milestones complete and documented Convex deployment-linking as the remaining external blocker for full runtime validation.
+Plan update note (2026-02-18): Added production deployment results and updated the remaining blocker to Vercel deployment protection for public image reachability.
