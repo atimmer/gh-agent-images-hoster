@@ -10,7 +10,7 @@ This file tracks tasks that require human credentials or approvals.
     - `CLERK_SECRET_KEY`
     - `CLERK_JWT_ISSUER_DOMAIN`
 
-- [ ] Configure Convex project linkage for this repository.
+- [x] Configure Convex project linkage for this repository.
   - Run: `pnpm exec convex dev` and complete interactive setup once.
   - This writes deployment configuration so Convex codegen and backend sync can run.
 
