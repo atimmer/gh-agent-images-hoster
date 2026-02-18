@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Added repository changelog/release tooling: `CHANGELOG.md`, `RELEASING.md`, GitHub Release notes extraction workflow, and npm publish workflow.
 
 ### Changed
 
