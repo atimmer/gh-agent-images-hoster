@@ -5,6 +5,14 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+## 0.1.2 - 2026-02-18
+
+### Added
+
+### Changed
 - Renamed the CLI command from `gh-agent-images` to `agent-images` across package bins, CLI help output, dashboard setup command, and documentation.
 
 ### Fixed
