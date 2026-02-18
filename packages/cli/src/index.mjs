@@ -7,8 +7,14 @@ import os from "node:os";
 import process from "node:process";
 import { lookup as lookupMimeType } from "mime-types";
 
-const CONFIG_DIR = path.join(os.homedir(), ".config", "gh-agent-images");
+const CONFIG_DIR = path.join(os.homedir(), ".config", "agent-images");
 const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
+const LEGACY_CONFIG_PATH = path.join(
+  os.homedir(),
+  ".config",
+  "gh-agent-images",
+  "config.json",
+);
 const SKILL_REPO_URL = "https://github.com/atimmer/gh-agent-images-hoster";
 const SKILL_NAME = "gh-agent-images-upload";
 
@@ -37,12 +43,12 @@ function parseArgs(argv) {
 }
 
 function printUsage() {
-  console.log(`gh-agent-images CLI
+  console.log(`agent-images CLI
 
 Usage:
-  gh-agent-images auth login --api <url> --token <token> [--agent <default-agent-name>]
-  gh-agent-images upload <file-path> --agent <agent-name> [--alt <markdown-alt-text>]
-  gh-agent-images install-skill [--agent <agent>] [--global]
+  agent-images auth login --api <url> --token <token> [--agent <default-agent-name>]
+  agent-images upload <file-path> --agent <agent-name> [--alt <markdown-alt-text>]
+  agent-images install-skill [--agent <agent>] [--global]
 
 Notes:
   - upload returns markdown you can paste directly into GitHub pull requests.
@@ -56,7 +62,12 @@ async function readConfig() {
     const raw = await readFile(CONFIG_PATH, "utf8");
     return JSON.parse(raw);
   } catch {
-    return null;
+    try {
+      const legacyRaw = await readFile(LEGACY_CONFIG_PATH, "utf8");
+      return JSON.parse(legacyRaw);
+    } catch {
+      return null;
+    }
   }
 }
 
@@ -130,7 +141,7 @@ async function runUpload(positional, flags) {
   const config = await readConfig();
   if (!config?.api || !config?.token) {
     throw new Error(
-      "Missing auth config. Run: gh-agent-images auth login --api <url> --token <token> --agent <name>",
+      "Missing auth config. Run: agent-images auth login --api <url> --token <token> --agent <name>",
     );
   }
 
@@ -255,7 +266,7 @@ async function main() {
     return;
   }
 
-  throw new Error("Unknown command. Run `gh-agent-images --help` for usage.");
+  throw new Error("Unknown command. Run `agent-images --help` for usage.");
 }
 
 main().catch((error) => {

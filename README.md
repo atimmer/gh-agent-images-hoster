@@ -51,7 +51,7 @@ After sign-in, the home page provides:
 The CLI is now a dedicated package at `packages/cli`:
 
 - Package name: `@24letters/agent-images`
-- Binary name: `gh-agent-images`
+- Binary name: `agent-images`
 
 Install from npm (after publish):
 
@@ -63,19 +63,19 @@ Run locally from this repo:
 
 ### One-time auth setup
 
-    gh-agent-images auth login --api <service-origin> --token <cli-token> --agent <default-agent-name>
+    agent-images auth login --api <service-origin> --token <cli-token> --agent <default-agent-name>
 
 Example:
 
-    gh-agent-images auth login --api https://gh-images.example.com --token ghimg_xxx --agent codex-agent
+    agent-images auth login --api https://gh-images.example.com --token ghimg_xxx --agent codex-agent
 
 ### Upload command
 
-    gh-agent-images upload <path-to-image> --agent <agent-name> [--alt "alt text"]
+    agent-images upload <path-to-image> --agent <agent-name> [--alt "alt text"]
 
 Example:
 
-    gh-agent-images upload ./screenshots/ui.png --agent codex-agent --alt "New dashboard"
+    agent-images upload ./screenshots/ui.png --agent codex-agent --alt "New dashboard"
 
 Output example:
 
@@ -87,7 +87,7 @@ Publish command from repo root:
 
 ### Install skill via CLI
 
-    gh-agent-images install-skill
+    agent-images install-skill
 
 This command delegates to [skills.sh](https://skills.sh/) and installs `gh-agent-images-upload` from this GitHub repository.
 

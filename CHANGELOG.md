@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Renamed the CLI command from `gh-agent-images` to `agent-images` across package bins, CLI help output, dashboard setup command, and documentation.
 
 ### Fixed
 - Updated npm publish GitHub Actions workflow to use npm trusted publishing runtime requirements (Node 22.14.0 + npm 11.5.1) instead of the previous token-based publish path.

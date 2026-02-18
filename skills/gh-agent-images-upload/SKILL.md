@@ -1,6 +1,6 @@
 ---
 name: gh-agent-images-upload
-description: Upload immutable PR images with the local gh-agent-images CLI and return ready-to-paste markdown.
+description: Upload immutable PR images with the local agent-images CLI and return ready-to-paste markdown.
 ---
 
 # GH Agent Images Upload Skill
@@ -9,7 +9,7 @@ Use this skill when an agent needs to upload an image file and return markdown t
 
 ## Prerequisites
 
-- CLI is available from this repo: `gh-agent-images`
+- CLI is available from this repo: `agent-images`
 - User has already generated a CLI token in the web UI settings.
 - API base URL points to this deployed service.
 
@@ -17,21 +17,21 @@ Use this skill when an agent needs to upload an image file and return markdown t
 
 Run once on the machine where uploads happen:
 
-    gh-agent-images auth login --api <service-origin> --token <cli-token> --agent <default-agent-name>
+    agent-images auth login --api <service-origin> --token <cli-token> --agent <default-agent-name>
 
 Example:
 
-    gh-agent-images auth login --api https://gh-images.example.com --token ghimg_xxx --agent codex-agent
+    agent-images auth login --api https://gh-images.example.com --token ghimg_xxx --agent codex-agent
 
 ## Upload Command
 
 Upload an image from disk and print markdown:
 
-    gh-agent-images upload <path-to-image> --agent <agent-name> [--alt "alt text"]
+    agent-images upload <path-to-image> --agent <agent-name> [--alt "alt text"]
 
 Example:
 
-    gh-agent-images upload ./screenshots/homepage.png --agent codex-agent --alt "Dashboard before fix"
+    agent-images upload ./screenshots/homepage.png --agent codex-agent --alt "Dashboard before fix"
 
 ## Expected Output
 

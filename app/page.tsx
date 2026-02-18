@@ -172,7 +172,7 @@ function Dashboard() {
   const setupTokenPlaceholder = justCreatedToken ?? "<paste-token-here>";
   const setupAgent = agentName.trim() || "codex-agent";
   const setupOrigin = appOrigin || "https://your-host.example.com";
-  const setupCommand = `gh-agent-images auth login --api ${setupOrigin} --token ${setupTokenPlaceholder} --agent ${setupAgent}`;
+  const setupCommand = `agent-images auth login --api ${setupOrigin} --token ${setupTokenPlaceholder} --agent ${setupAgent}`;
 
   const handleCreateToken = async () => {
     setIsCreatingToken(true);

@@ -13,7 +13,7 @@
     "url": "https://github.com/atimmer/gh-agent-images-hoster/issues"
   },
   "bin": {
-    "gh-agent-images": "src/index.mjs"
+    "agent-images": "src/index.mjs"
   },
   "files": [
     "src",

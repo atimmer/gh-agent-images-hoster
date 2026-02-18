@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "bin": {
-    "gh-agent-images": "./bin/gh-agent-images.mjs"
+    "agent-images": "./bin/agent-images.mjs"
   },
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
