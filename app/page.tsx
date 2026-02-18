@@ -2,11 +2,15 @@
 
 import {
   SignInButton,
-  SignedIn,
-  SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { useMutation, useQuery } from "convex/react";
+import {
+  Authenticated,
+  AuthLoading,
+  Unauthenticated,
+  useMutation,
+  useQuery,
+} from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
@@ -95,14 +99,14 @@ export default function Home() {
             </p>
             <h1 className="text-xl font-semibold text-slate-50">GH Agent Images Hoster</h1>
           </div>
-          <SignedIn>
+          <Authenticated>
             <UserButton />
-          </SignedIn>
+          </Authenticated>
         </div>
       </header>
 
       <main className="relative z-10 mx-auto w-full max-w-6xl px-6 py-10">
-        <SignedOut>
+        <Unauthenticated>
           <section className="mx-auto mt-10 flex max-w-2xl flex-col items-center gap-6 rounded-2xl border border-cyan-500/30 bg-slate-900/70 p-10 text-center shadow-2xl shadow-cyan-950/40">
             <p className="font-mono text-xs uppercase tracking-widest text-cyan-200">
               Immutable Image Hosting for Agents
@@ -120,11 +124,17 @@ export default function Home() {
               </button>
             </SignInButton>
           </section>
-        </SignedOut>
+        </Unauthenticated>
 
-        <SignedIn>
+        <AuthLoading>
+          <section className="mx-auto mt-10 max-w-2xl rounded-2xl border border-slate-800 bg-slate-900/70 p-10 text-center text-slate-300 shadow-2xl shadow-slate-950/40">
+            Loading authenticated session...
+          </section>
+        </AuthLoading>
+
+        <Authenticated>
           <Dashboard />
-        </SignedIn>
+        </Authenticated>
       </main>
     </div>
   );
