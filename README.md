@@ -1,51 +1,99 @@
-# Welcome to your Convex + Next.js + Clerk app
+# GH Agent Images Hoster
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+Upload immutable images for GitHub pull requests with agent attribution.
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+This app is built with:
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [Clerk](https://clerk.com/) for authentication
+- Next.js (web UI + API routes, Vercel-hosted)
+- Convex (database + file storage)
+- Clerk (authentication)
 
-## Get started
+## What it does
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+- Upload images from disk via CLI.
+- Require an `agentName` for each upload.
+- Return Markdown ready for PR comments/descriptions.
+- Serve images publicly from non-guessable URLs (`/i/<uuid>`).
+- Never replace images in-place (each upload is a new immutable record).
+- Send long-lived cache headers (`public, max-age=31536000, immutable`).
 
-```
-npm install
-npm run dev
-```
+## Local Setup
 
-If you're reading this README on GitHub and want to use this template, run:
+1. Install dependencies:
 
-```
-npm create convex@latest -- -t nextjs-clerk
-```
+    pnpm install
 
-Then:
+2. Configure environment variables (`.env.local`):
 
-1. Open your app. There should be a "Claim your application" button from Clerk in the bottom right of your app.
-2. Follow the steps to claim your application and link it to this app.
-3. Follow step 3 in the [Convex Clerk onboarding guide](https://docs.convex.dev/auth/clerk#get-started) to create a Convex JWT template.
-4. Uncomment the Clerk provider in `convex/auth.config.ts`
-5. Paste the Issuer URL as `CLERK_JWT_ISSUER_DOMAIN` to your dev deployment environment variable settings on the Convex dashboard (see [docs](https://docs.convex.dev/auth/clerk#configuring-dev-and-prod-instances))
+    NEXT_PUBLIC_CONVEX_URL=<your convex url>
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your clerk publishable key>
+    CLERK_SECRET_KEY=<your clerk secret key>
+    CLERK_JWT_ISSUER_DOMAIN=<your clerk issuer domain>
 
-If you want to sync Clerk user data via webhooks, check out this [example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
+3. Connect Convex once (interactive):
 
-## Learn more
+    pnpm exec convex dev
 
-To learn more about developing your project with Convex, check out:
+4. Start development servers:
 
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
+    pnpm dev
 
-## Join the community
+## Web UI
 
-Join thousands of developers building full-stack apps with Convex:
+After sign-in, the home page provides:
 
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+- Uploaded image gallery with copyable Markdown snippets.
+- CLI token management.
+- A copyable setup command for CLI auth.
+
+## CLI
+
+The repository ships a local CLI binary: `gh-agent-images`.
+
+### One-time auth setup
+
+    gh-agent-images auth login --api <service-origin> --token <cli-token> --agent <default-agent-name>
+
+Example:
+
+    gh-agent-images auth login --api https://gh-images.example.com --token ghimg_xxx --agent codex-agent
+
+### Upload command
+
+    gh-agent-images upload <path-to-image> --agent <agent-name> [--alt "alt text"]
+
+Example:
+
+    gh-agent-images upload ./screenshots/ui.png --agent codex-agent --alt "New dashboard"
+
+Output example:
+
+    ![New dashboard](https://gh-images.example.com/i/6f0f2f3e-b9cc-4d8f-97d3-0c254e7fba4e)
+
+## Deployment
+
+### Clerk
+
+- Create development and production Clerk applications.
+- Enable a JWT template with application ID `convex`.
+
+### Convex
+
+- Configure `CLERK_JWT_ISSUER_DOMAIN` in Convex deployment settings.
+- Deploy backend:
+
+    pnpm exec convex deploy
+
+### Vercel
+
+- Create/import Vercel project.
+- Add env vars from local setup section.
+- Deploy:
+
+    vercel --prod
+
+## Agent Skill
+
+A reusable skill for other agents exists at:
+
+- `skills/gh-agent-images-upload/SKILL.md`

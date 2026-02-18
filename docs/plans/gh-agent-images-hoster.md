@@ -12,17 +12,21 @@ This project lets authenticated users upload images through a CLI or a web app a
 
 - [x] (2026-02-18 10:52Z) Confirmed requirements with user: public rendering, non-guessable URLs, immutable uploads, one-year caching.
 - [x] (2026-02-18 10:52Z) Reviewed repository baseline and `PLANS.md` format.
-- [ ] Create backend schema and Convex functions for image records and CLI tokens.
-- [ ] Add public image serving route with 1-year immutable cache headers.
-- [ ] Build Next.js API endpoint for CLI upload workflow.
-- [ ] Build local CLI tool with `auth login` and `upload` commands.
-- [ ] Build authenticated web dashboard and settings flow with copyable CLI setup command.
-- [ ] Update project docs (`README.md`, `AGENTS.md`, `HUMAN_TASKS.md`) and verify with lint/build.
+- [x] (2026-02-18 10:56Z) Replaced demo Convex schema and functions with `images`, `cliTokens`, and `uploadIntents` model plus token/image queries + mutations.
+- [x] (2026-02-18 10:58Z) Added public image route `app/i/[imageId]/route.ts` with immutable one-year cache headers.
+- [x] (2026-02-18 10:59Z) Added CLI upload API route `app/api/cli/upload/route.ts` with bearer-token validation and Convex storage upload/finalize flow.
+- [x] (2026-02-18 11:00Z) Added local CLI `bin/gh-agent-images.mjs` with `auth login` and `upload`.
+- [x] (2026-02-18 11:00Z) Rebuilt home page into authenticated dashboard + settings for token management and copyable setup command.
+- [x] (2026-02-18 11:00Z) Added `AGENTS.md`, `HUMAN_TASKS.md`, skill file, and updated `README.md`.
+- [x] (2026-02-18 11:07Z) Ran `pnpm lint` and `pnpm build` successfully after implementation updates.
 
 ## Surprises & Discoveries
 
-- Observation: The repository has no `.git` directory, so atomic commits cannot be made in this workspace yet.
+- Observation: The repository initially had no `.git` directory.
   Evidence: `git status --short --branch` returned `fatal: not a git repository`.
+
+- Observation: Convex code generation is blocked until a deployment is linked interactively.
+  Evidence: `pnpm exec convex codegen` failed with `No CONVEX_DEPLOYMENT set`, and `pnpm exec convex dev --once` failed because interactive prompts are unavailable in this terminal mode.
 
 ## Decision Log
 
@@ -34,18 +38,26 @@ This project lets authenticated users upload images through a CLI or a web app a
   Rationale: This keeps image URLs on the app domain, supports non-guessable IDs, and enables explicit one-year immutable cache headers.
   Date/Author: 2026-02-18 / Codex
 
+- Decision: Use hashed user-generated CLI tokens with upload intents instead of direct unauthenticated upload URLs.
+  Rationale: This ties each upload to a user and an agent name, enables revocation, and avoids exposing direct persistent storage write credentials.
+  Date/Author: 2026-02-18 / Codex
+
+- Decision: Patch `convex/_generated/api.d.ts` temporarily to unblock local TypeScript references before Convex codegen can run.
+  Rationale: Convex CLI cannot generate types without deployment linkage; this keeps development moving while human setup is pending.
+  Date/Author: 2026-02-18 / Codex
+
 ## Outcomes & Retrospective
 
-Pending. This section will be updated at milestone completion.
+Implemented core functionality end-to-end: immutable image records, public cached image delivery, CLI upload path, token settings UX, and documentation/agent guidance. The remaining gap is environment-specific validation (`convex codegen`, live auth flow, production deployment), which requires human credentials and interactive setup already tracked in `HUMAN_TASKS.md`.
 
 ## Context and Orientation
 
-The repository currently contains a generated starter app in `app`, `components`, and `convex`. Authentication UI is present but backend auth provider setup in `convex/auth.config.ts` is commented out. Existing Convex functions in `convex/myFunctions.ts` and schema in `convex/schema.ts` are demo code.
+The repository now contains a working implementation centered on immutable PR image hosting. The old demo files have been removed and replaced by production-oriented Convex functions and a CLI route.
 
 The final implementation will center on these areas:
 
 - `convex/schema.ts`: data model for image metadata and CLI tokens.
-- `convex/*.ts`: queries, mutations, and actions for image listing, token creation, upload finalization, and public image lookup.
+- `convex/*.ts`: queries and mutations for image listing, token creation/revocation, upload finalization, and public image lookup.
 - `app/i/[imageId]/route.ts`: public image serving route with immutable caching.
 - `app/api/cli/upload/route.ts`: CLI-facing upload endpoint.
 - `app/page.tsx` and supporting components: authenticated dashboard/settings UX.
@@ -62,7 +74,7 @@ First, replace demo Convex schema/functions with production-focused tables and A
 
 Then add upload flow:
 
-- A web-authenticated Convex action generates CLI tokens and returns plaintext once.
+- Web UI creates CLI tokens by generating token secrets in-browser and storing only hashed values in Convex.
 - A Next API route receives multipart file uploads from the CLI, validates bearer token via Convex mutation, uploads binary bytes to Convex storage using generated upload URLs, and finalizes metadata in `images`.
 
 Then add delivery layer:
@@ -89,15 +101,19 @@ Run from repository root (`/Users/anton/Code/gh-agent-images-hoster`):
 
    pnpm install
 
-2. Regenerate Convex types after schema/function changes:
+2. Link Convex project interactively (human step, once per clone):
 
-   pnpm convex dev --once
+   pnpm exec convex dev
 
-3. Run local development servers:
+3. Regenerate Convex types after linking:
+
+   pnpm exec convex codegen
+
+4. Run local development servers:
 
    pnpm dev
 
-4. Validate lint and production build:
+5. Validate lint and production build:
 
    pnpm lint
    pnpm build
@@ -135,11 +151,19 @@ If environment variables are missing, the app should fail with explicit setup gu
   git status --short --branch
   fatal: not a git repository (or any of the parent directories): .git
 
+- Convex linkage/codegen artifact:
+
+  pnpm exec convex codegen
+  ✖ No CONVEX_DEPLOYMENT set, run `npx convex dev` to configure a Convex project
+
+  pnpm exec convex dev --once
+  ✖ Cannot prompt for input in non-interactive terminals. (What would you like to configure?)
+
 ## Interfaces and Dependencies
 
 Key dependencies used:
 
-- `convex`: database, queries/mutations/actions, and file storage.
+- `convex`: database, queries/mutations, and file storage.
 - `@clerk/nextjs`: user authentication in the web app.
 - Next.js App Router route handlers for CLI API and public image responses.
 
@@ -148,11 +172,11 @@ Required interfaces at completion:
 - Convex mutation for issuing upload parameters by CLI token.
 - Convex mutation for finalizing immutable image metadata.
 - Convex query for user dashboard image listing.
-- Convex action for creating/revoking/listing CLI tokens.
+- Convex queries/mutations for creating/revoking/listing CLI tokens.
 - Next route handler `app/api/cli/upload/route.ts` accepting `multipart/form-data` with `file` + `agentName`.
 - Next route handler `app/i/[imageId]/route.ts` returning image bytes and one-year cache headers.
 - CLI binary `gh-agent-images` supporting:
   - `auth login --api <url> --token <token>`
   - `upload <path> --agent <name> [--alt <text>]`
 
-Plan update note (2026-02-18): Initial ExecPlan created from discovered starter app and clarified product constraints (public immutable URLs, one-year cache).
+Plan update note (2026-02-18): Marked implementation milestones complete and documented Convex deployment-linking as the remaining external blocker for full runtime validation.
