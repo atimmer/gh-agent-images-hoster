@@ -19,11 +19,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+          node-version: "22.14.0"
 
       - name: Enable corepack
         run: corepack enable
+
+      - name: Update npm
+        run: npm install -g npm@11.5.1
 
       - name: Activate pnpm
         run: corepack prepare pnpm@10.28.2 --activate

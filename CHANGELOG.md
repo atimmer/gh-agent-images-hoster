@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- Updated npm publish GitHub Actions workflow to use npm trusted publishing runtime requirements (Node 22.14.0 + npm 11.5.1) instead of the previous token-based publish path.
 
 ## 0.1.1 - 2026-02-18
 
