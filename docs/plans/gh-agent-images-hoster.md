@@ -21,7 +21,7 @@ This project lets authenticated users upload images through a CLI or a web app a
 - [x] (2026-02-18 11:07Z) Ran `pnpm lint` and `pnpm build` successfully after implementation updates.
 - [x] (2026-02-18 11:21Z) Deployed Convex production backend to `https://fast-impala-736.convex.cloud`.
 - [x] (2026-02-18 11:22Z) Deployed Vercel production app and configured production env vars.
-- [ ] Resolve Vercel deployment protection so public image URLs are reachable without authentication.
+- [x] (2026-02-18 11:24Z) Disabled Vercel SSO deployment protection through Vercel API; public URLs now return HTTP 200.
 
 ## Surprises & Discoveries
 
@@ -31,8 +31,8 @@ This project lets authenticated users upload images through a CLI or a web app a
 - Observation: Convex code generation is blocked until a deployment is linked interactively.
   Evidence: `pnpm exec convex codegen` failed with `No CONVEX_DEPLOYMENT set`, and `pnpm exec convex dev --once` failed because interactive prompts are unavailable in this terminal mode.
 
-- Observation: Vercel production deployment is ready but currently protected by Vercel Authentication.
-  Evidence: `curl -I https://gh-agent-images-hoster.vercel.app` returns HTTP `401 Authentication Required`.
+- Observation: Vercel project-level deployment protection was enabled (`ssoProtection: all_except_custom_domains`) and blocked public rendering requirements.
+  Evidence: Vercel project API showed `ssoProtection.deploymentType=all_except_custom_domains`; after PATCH to `null`, `curl -I https://gh-agent-images-hoster.vercel.app` returned HTTP `200`.
 
 ## Decision Log
 
@@ -59,6 +59,7 @@ This project lets authenticated users upload images through a CLI or a web app a
 ## Outcomes & Retrospective
 
 Implemented core functionality end-to-end and deployed both Convex and Vercel production targets. The remaining gap is removing Vercel deployment protection so image URLs are publicly accessible for GitHub rendering, which is tracked in `HUMAN_TASKS.md`.
+Implemented core functionality end-to-end and deployed both Convex and Vercel production targets with public reachability for image rendering. The only remaining decision is whether to keep the reused Clerk instance or rotate to a dedicated Clerk production app.
 
 ## Context and Orientation
 
@@ -178,7 +179,7 @@ If environment variables are missing, the app should fail with explicit setup gu
   Production: https://gh-agent-images-hoster-c9d43snld-atimmers-projects.vercel.app
 
   curl -I https://gh-agent-images-hoster.vercel.app
-  HTTP/2 401
+  HTTP/2 200
 
 ## Interfaces and Dependencies
 
@@ -200,4 +201,4 @@ Required interfaces at completion:
   - `auth login --api <url> --token <token>`
   - `upload <path> --agent <name> [--alt <text>]`
 
-Plan update note (2026-02-18): Added production deployment results and updated the remaining blocker to Vercel deployment protection for public image reachability.
+Plan update note (2026-02-18): Recorded Vercel protection removal and verified public access to production URLs.
