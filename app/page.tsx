@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  SignedIn,
+  SignedOut,
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
@@ -118,11 +120,18 @@ export default function Home() {
               Sign in to create CLI tokens, upload images with an agent name, and copy
               markdown links that render publicly.
             </p>
-            <SignInButton mode="modal">
-              <button className="rounded-lg border border-cyan-300 bg-cyan-400 px-5 py-2 font-medium text-slate-950 transition hover:bg-cyan-300">
-                Sign in to continue
-              </button>
-            </SignInButton>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="rounded-lg border border-cyan-300 bg-cyan-400 px-5 py-2 font-medium text-slate-950 transition hover:bg-cyan-300">
+                  Sign in to continue
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <p className="text-sm text-slate-300">
+                Clerk session detected. Convex auth is still initializing.
+              </p>
+            </SignedIn>
           </section>
         </Unauthenticated>
 
